@@ -34,10 +34,12 @@ class HtmlProductWriter extends ShopProductWriter
         foreach ($this->products as $product) {
          if($product instanceof BookProduct) $bookproducts[] = $product;
          if($product instanceof CdProduct) $cdproducts[] = $product;
+         if($product instanceof GameProduct) $gameproducts[] =$product;
         }
 
         $booktable = $this->generateBookTable($bookproducts);
         $cdtable = $this->generateCdTable($cdproducts);
+        $gametable =$this->generatedGameTable($gameproducts);
 
         $addProduct = $this->generateAddProductForm();
 
@@ -45,9 +47,11 @@ class HtmlProductWriter extends ShopProductWriter
             '<body>'
             . $booktable .
             '<br />'
-            .$cdtable.
+            . $cdtable .
             '<br />'
-            .$addProduct .
+            . $gametable .
+            '<br />'
+            . $addProduct .
             '</body>';
     }
 
@@ -113,6 +117,36 @@ class HtmlProductWriter extends ShopProductWriter
             </table>';
     }
 
+    private function generatedGameTable($gameproducts)
+    {
+        $contents = '';
+        foreach ($gameproducts as $game) {
+            $contents .= '<tr>
+                  <td>'.$game->getTitle().'</td>'
+                .'<td>'.$game->getFullName().'</td>'
+                .'<td>'.$game->getPegi().'</td>'
+                .'<td>'.$game->getPrice().'</td>'
+                .'<td>'.'<a href="./index.php?delete='.$game->getId().'">X</a>'.'</td>
+                </tr>';
+        }
+        return
+            '
+            <h3>Games</h3>
+            <table class="paleBlueRows equal-width">
+                 <thead>
+                    <tr>                    
+                        <th>CONSOLE</th>
+                        <th>TITLE</th>
+                        <th>PEGI</th>
+                        <th>PRICE</th>
+                        <th>DELETE</th>
+                    </tr>
+                    </thead>
+                    <tbody>'
+            .$contents.
+            '</tbody>
+            </table>';
+    }
     private function generateAddProductForm()
     {
         return '
@@ -123,13 +157,14 @@ class HtmlProductWriter extends ShopProductWriter
           <select id="producttype" name="producttype">
                 <option value="cd">CD</option>
                 <option value="book">Book</option>
+                <option value="game">Game</option>
           </select> 
           <br />
           <br />
          <label for="name">Author / Artist:</label><br />
          <label for="fname">First Name:</label>
            <input type="text" id="fname" name="fname"><br />
-          <label for="sname">Main Name / Surname:</label>
+          <label for="sname">Main Name / Surname/ Console:</label>
            <input type="text" id="sname" name="sname">
            <br />
            <br />
@@ -137,7 +172,7 @@ class HtmlProductWriter extends ShopProductWriter
            <input type="text" id="title" name="title">
            <br />
            <br />
-         <label for="pages">Pages/Duration:</label>
+         <label for="pages">Pages/Duration/Pegi:</label>
            <input type="text" id="pages" name="pages">
            <br />
            <br />
