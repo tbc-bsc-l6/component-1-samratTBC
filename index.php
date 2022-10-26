@@ -37,6 +37,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['price'])) {
         $price = (is_numeric($_POST['price']) ? (float)$_POST['price'] : 0);
     }
+    
     \awe\JsonUtility::addNewProduct("products.json", $producttype, $fname, $sname, $title, $pages, $price);
 }
 
